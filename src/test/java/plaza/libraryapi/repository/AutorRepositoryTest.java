@@ -70,10 +70,10 @@ public class AutorRepositoryTest {
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
 
         Livro livro = new Livro(null, "66886-84874","Bananas", null,
-                GeneroLivro.CIENCIA, BigDecimal.valueOf(200), autor);
+                GeneroLivro.CIENCIA, BigDecimal.valueOf(200), autor, null, null, null);
 
         Livro livro2 = new Livro(null, "77886-84874","poteatles", null,
-                GeneroLivro.CIENCIA, BigDecimal.valueOf(300), autor);
+                GeneroLivro.CIENCIA, BigDecimal.valueOf(300), autor, null, null, null);
 
         autor.setLivros(new ArrayList<>());
         autor.getLivros().add(livro);
@@ -84,7 +84,7 @@ public class AutorRepositoryTest {
     }
     @Test
     void imprimir(){
-        var id = UUID.fromString("d744abdc-60b6-451f-a0a4-ec021089ace8");
+        var id = UUID.fromString("dd2a5ce7-24a5-4d3a-8563-9c3137779413");
         Autor autor = repository.findById(id).orElse(null);
 
         List<Livro> livros = livroRepository.findByAutor(autor);

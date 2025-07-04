@@ -24,12 +24,12 @@ class LivroRepositoryTest {
     @Test
     void salvarTest(){
 
-        var id = UUID.fromString("d5f68de3-2cbf-4d8a-baf3-75cd5b9f9d64");
-        Autor autor = autorRepository.findById(id).get();
+        var id = UUID.fromString("dd2a5ce7-24a5-4d3a-8563-9c3137779413");
+        Autor autor = autorRepository.findById(id).orElse(null);
 
         Livro livro = new Livro(null, "90886-84874",
-                "UFO", null, GeneroLivro.FICCAO, BigDecimal.valueOf(100),
-                autor);
+                "blabla", LocalDate.of(2000, 9, 2), GeneroLivro.FICCAO, BigDecimal.valueOf(100),
+                autor, null, null, null);
 
         livroRepository.save(livro);
     }
@@ -41,7 +41,7 @@ class LivroRepositoryTest {
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
 
         Livro livro = new Livro(null, "90886-84874","Outro Livro", null,
-                GeneroLivro.FICCAO, BigDecimal.valueOf(100), autor);
+                GeneroLivro.FICCAO, BigDecimal.valueOf(100), autor, null, null, null);
 
         livroRepository.save(livro);
     }

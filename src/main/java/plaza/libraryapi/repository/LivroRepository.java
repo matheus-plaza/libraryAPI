@@ -58,7 +58,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Transactional
     void deleteByTitulo(String titulo);
 
-
+    boolean existsByAutor(Autor autor);
 
 
 
