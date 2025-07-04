@@ -18,28 +18,6 @@ public class AutorValidator {
         this.autorRepository = autorRepository;
     }
 
-//    public void validar(Autor autor){
-//        Optional<Autor> optionalValidador = autorRepository.findById(autor.getId());
-//
-//        AutorDTO autorDTO = new AutorDTO(autor.getId(),
-//                autor.getNome(),
-//                autor.getDataNascimento(),
-//                autor.getNacionalidade());
-//
-//        if(optionalValidador.isPresent()){
-//           Autor validador = optionalValidador.get();
-//            AutorDTO validadorDTO = new AutorDTO(validador.getId(),
-//                    validador.getNome(),
-//                    validador.getDataNascimento(),
-//                    validador.getNacionalidade());
-//
-//
-//            if(validadorDTO.equals(autorDTO)){
-//                throw new RegistroDuplicadoException("Registro duplicado");
-//            }
-//        }
-//    }
-
     public void validar(Autor autor){
         if(existeAutorCadastrado(autor)){
             throw new RegistroDuplicadoException("Autor ja cadastrado!");

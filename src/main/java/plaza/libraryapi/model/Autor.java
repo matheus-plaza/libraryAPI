@@ -41,7 +41,6 @@ public class Autor {
     )
     private List<Livro> livros;
 
-    @Deprecated
     public Autor(){
         //para uso do framework
     }

@@ -1,6 +1,8 @@
 package plaza.libraryapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,7 +28,7 @@ public class AutorController {
     private final AutorService service;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autor) {
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autor) {
         try{
             var entidade = autor.mapearAutor();
             service.salvar(entidade);
@@ -44,7 +46,7 @@ public class AutorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody AutorDTO dto){
+    public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto){
         try {
             Optional<Autor> autorOptional = service.buscarPorId(UUID.fromString(id));
             if (autorOptional.isEmpty()) {
@@ -99,7 +101,7 @@ public class AutorController {
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) String nacionalidade){
 
-        List<Autor> autores = service.buscarFiltro(nome, nacionalidade);
+        List<Autor> autores = service.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> autoresDTO = autores.stream().
                 map(autor -> new AutorDTO(autor.getId(),
                         autor.getNome(), autor.getDataNascimento(),
