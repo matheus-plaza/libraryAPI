@@ -32,7 +32,7 @@ public class Autor {
     @CreatedDate
     private LocalDateTime dataCadastro;
     @LastModifiedDate
-    private LocalDateTime dastaAtualizacao;
+    private LocalDateTime dataAtualizacao;
     private UUID idUsuario;
 
 

@@ -70,10 +70,10 @@ public class AutorRepositoryTest {
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
 
         Livro livro = new Livro(null, "66886-84874","Bananas", null,
-                GeneroLivro.CIENCIA, BigDecimal.valueOf(200), autor, null, null, null);
+                GeneroLivro.CIENCIA, BigDecimal.valueOf(200),  null, null, null, autor);
 
         Livro livro2 = new Livro(null, "77886-84874","poteatles", null,
-                GeneroLivro.CIENCIA, BigDecimal.valueOf(300), autor, null, null, null);
+                GeneroLivro.CIENCIA, BigDecimal.valueOf(300), null, null, null, autor);
 
         autor.setLivros(new ArrayList<>());
         autor.getLivros().add(livro);

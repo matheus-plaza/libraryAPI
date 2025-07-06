@@ -1,0 +1,35 @@
+package plaza.libraryapi.controller;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import plaza.libraryapi.controller.dto.CadastroLivroDTO;
+import plaza.libraryapi.controller.dto.ErroResposta;
+import plaza.libraryapi.controller.dto.PesquisaLivroDto;
+import plaza.libraryapi.exceptions.RegistroDuplicadoException;
+import plaza.libraryapi.model.Livro;
+import plaza.libraryapi.service.LivroService;
+
+@RestController
+@RequestMapping("livros")
+@RequiredArgsConstructor
+public class LivroController {
+
+    private final LivroService livroService;
+
+    @PostMapping
+    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO LivroDto){
+            try {
+
+                 return ResponseEntity.ok(LivroDto);
+            } catch (RegistroDuplicadoException e){
+                var erroDTO = ErroResposta.conflito(e.getMessage());
+                return ResponseEntity.status(erroDTO.status()).body(erroDTO);
+        }
+
+    }
+}

@@ -28,8 +28,8 @@ class LivroRepositoryTest {
         Autor autor = autorRepository.findById(id).orElse(null);
 
         Livro livro = new Livro(null, "90886-84874",
-                "blabla", LocalDate.of(2000, 9, 2), GeneroLivro.FICCAO, BigDecimal.valueOf(100),
-                autor, null, null, null);
+                "blabla", LocalDate.of(2000, 9, 2), GeneroLivro.FICCAO,
+                BigDecimal.valueOf(100), null, null, null, autor);
 
         livroRepository.save(livro);
     }
@@ -41,7 +41,7 @@ class LivroRepositoryTest {
         autor.setDataNascimento(LocalDate.of(1951, 1, 31));
 
         Livro livro = new Livro(null, "90886-84874","Outro Livro", null,
-                GeneroLivro.FICCAO, BigDecimal.valueOf(100), autor, null, null, null);
+                GeneroLivro.FICCAO, BigDecimal.valueOf(100), null, null, null, autor);
 
         livroRepository.save(livro);
     }

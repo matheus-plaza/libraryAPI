@@ -36,6 +36,11 @@ public class Livro{
     private GeneroLivro genero;
     @Column(precision = 18, scale = 2, nullable = false)
     private BigDecimal preco;
+    @CreatedDate
+    private LocalDateTime dataCadastro;
+    @LastModifiedDate
+    private LocalDateTime dataAtualizacao;
+    private UUID idUsuario;
 
     @ManyToOne(
 //            cascade = CascadeType.ALL,
@@ -43,11 +48,4 @@ public class Livro{
             )
     @JoinColumn(name = "id_autor")
     private Autor autor;
-    @CreatedDate
-    private LocalDateTime dataCadastro;
-    @LastModifiedDate
-    private LocalDateTime dastaAtualizacao;
-    private UUID idUsuario;
-
-
 }
