@@ -33,22 +33,22 @@ public class AutorService {
 
     public void deletarAutor(Autor autor){
         if (possuiLivro(autor)){
-            throw new OperacaoNaoPermitidaException("Nao é possivel deletar pois o autor possui livros !");
+            throw new OperacaoNaoPermitidaException("Nao é possivel deletar pois o autor possui livros cadastrados!");
         }
         repository.deleteById(autor.getId());
     }
-
-    public List<Autor> buscarFiltro(String nome, String nacionalidade){
-        if(nome != null && nacionalidade != null){
-            return repository.findByNomeAndNacionalidade(nome, nacionalidade);
-        } else if (nome != null) {
-            return repository.findByNome(nome);
-        }
-        else if(nacionalidade != null){
-            return repository.findByNacionalidade(nacionalidade);
-        }
-        return repository.findAll();
-    }
+//
+//    public List<Autor> buscarFiltro(String nome, String nacionalidade){
+//        if(nome != null && nacionalidade != null){
+//            return repository.findByNomeAndNacionalidade(nome, nacionalidade);
+//        } else if (nome != null) {
+//            return repository.findByNome(nome);
+//        }
+//        else if(nacionalidade != null){
+//            return repository.findByNacionalidade(nacionalidade);
+//        }
+//        return repository.findAll();
+//    }
 
     public List<Autor> pesquisaByExample(String nome, String nacionalidade){
         var autor = new Autor();

@@ -10,26 +10,29 @@ import org.springframework.web.bind.annotation.RestController;
 import plaza.libraryapi.controller.dto.CadastroLivroDTO;
 import plaza.libraryapi.controller.dto.ErroResposta;
 import plaza.libraryapi.controller.dto.PesquisaLivroDto;
+import plaza.libraryapi.controller.mappers.LivroMapper;
 import plaza.libraryapi.exceptions.RegistroDuplicadoException;
 import plaza.libraryapi.model.Livro;
 import plaza.libraryapi.service.LivroService;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("livros")
 @RequiredArgsConstructor
-public class LivroController {
+public class LivroController implements GenericController {
 
     private final LivroService livroService;
+    private final LivroMapper livroMapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO LivroDto){
-            try {
+    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO livroDto) {
 
-                 return ResponseEntity.ok(LivroDto);
-            } catch (RegistroDuplicadoException e){
-                var erroDTO = ErroResposta.conflito(e.getMessage());
-                return ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
-
+        Livro livro = livroMapper.toEntity(livroDto);
+        livroService.salvar(livro);
+        URI location = gerarHeadLocation(livro.getId());
+        return ResponseEntity.created(location).build();
     }
+
 }
+
