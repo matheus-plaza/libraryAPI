@@ -7,6 +7,9 @@ import plaza.libraryapi.controller.dto.CadastroLivroDTO;
 import plaza.libraryapi.model.Livro;
 import plaza.libraryapi.repository.LivroRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class LivroService {
@@ -17,4 +20,7 @@ public class LivroService {
         return livroRepository.save(livro);
     }
 
+    public Optional<Livro> buscarPorId(UUID id){
+        return livroRepository.findById(id);
+    }
 }

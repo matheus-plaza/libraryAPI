@@ -17,6 +17,7 @@ public record PesquisaLivroDto(UUID id,
                                @NotNull(message = "Campo obrigatorio")
                                @Past(message = "Nao permitido data futura")
                                LocalDate dataPublicacao,
-                               GeneroLivro genero, BigDecimal preco,
+                               GeneroLivro genero,
+                               BigDecimal preco,
                                AutorDTO autor) {
 }
