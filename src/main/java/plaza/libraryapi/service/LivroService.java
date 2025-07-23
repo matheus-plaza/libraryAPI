@@ -9,6 +9,7 @@ import plaza.libraryapi.model.GeneroLivro;
 import plaza.libraryapi.model.Livro;
 import plaza.libraryapi.repository.LivroRepository;
 import plaza.libraryapi.repository.specs.LivroSpecs;
+import plaza.libraryapi.validator.LivroValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +20,12 @@ import static plaza.libraryapi.repository.specs.LivroSpecs.*;
 @RequiredArgsConstructor
 public class LivroService {
 
-    public final LivroRepository livroRepository;
+    private final LivroRepository livroRepository;
+
+    private final LivroValidator validator;
 
     public Livro salvar(Livro livro) {
+        validator.validarISBN(livro);
         return livroRepository.save(livro);
     }
 
@@ -64,6 +68,7 @@ public class LivroService {
     }
 
     public void atualizar(Livro livro) {
+        validator.validarISBN(livro);
         if (livro.getId() == null) {
             throw new IllegalArgumentException("Para atualizar eh necessario o livro ja estar cadastrado");
         }
