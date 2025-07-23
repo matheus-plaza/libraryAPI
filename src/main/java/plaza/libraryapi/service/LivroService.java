@@ -17,23 +17,23 @@ import static plaza.libraryapi.repository.specs.LivroSpecs.*;
 
 @Service
 @RequiredArgsConstructor
-public class LivroService{
+public class LivroService {
 
     public final LivroRepository livroRepository;
 
-    public Livro salvar(Livro livro){
+    public Livro salvar(Livro livro) {
         return livroRepository.save(livro);
     }
 
-    public Optional<Livro> buscarPorId(UUID id){
+    public Optional<Livro> buscarPorId(UUID id) {
         return livroRepository.findById(id);
     }
 
-    public void deletarLivro(Livro livro){
+    public void deletarLivro(Livro livro) {
         livroRepository.delete(livro);
     }
 
-    public List<Livro> pesquisa (String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao){
+    public List<Livro> pesquisa(String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao) {
 
 //        Specification<Livro> specs = Specification.where(LivroSpecs.isbnEqual(isbn)
 //                .and(LivroSpecs.tituloLike(titulo)
@@ -41,25 +41,33 @@ public class LivroService{
 
         //select * from livro where 0=0
         Specification<Livro> specs = Specification.where((root, query, criteriaBuilder) ->
-                criteriaBuilder.conjunction() );
+                criteriaBuilder.conjunction());
         if (isbn != null) {
             specs = specs.and(isbnEqual(isbn));
         }
-        if (titulo != null){
+        if (titulo != null) {
             specs = specs.and(tituloLike(titulo));
         }
-        if (genero != null){
+        if (genero != null) {
             specs = specs.and(generoEqual(genero));
         }
 
-        if (anoPublicacao != null){
+        if (anoPublicacao != null) {
             specs = specs.and(anoPublicacaoEqual(anoPublicacao));
         }
 
-        if (nomeAutor != null){
+        if (nomeAutor != null) {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
         return livroRepository.findAll(specs);
     }
+
+    public void atualizar(Livro livro) {
+        if (livro.getId() == null) {
+            throw new IllegalArgumentException("Para atualizar eh necessario o livro ja estar cadastrado");
+        }
+        livroRepository.save(livro);
+    }
+
 }
