@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import plaza.libraryapi.controller.dto.ErroCampo;
 import plaza.libraryapi.controller.dto.ErroResposta;
+import plaza.libraryapi.exceptions.CampoInvalidoException;
 import plaza.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import plaza.libraryapi.exceptions.RegistroDuplicadoException;
 
@@ -39,9 +40,18 @@ public class GlobalExceptionHandler {
         return ErroResposta.respostaPadrao(e.getMessage());
     }
 
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResposta handleCampoInvalidoException(CampoInvalidoException e){
+        return new ErroResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validacao. ",
+                List.of(new ErroCampo(e.getCampo(), e.getMessage())));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroResposta handleErrosNaoTratados(RuntimeException e){
+        System.out.println(e.getMessage());
         return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Erro inesperado, entre em contato com a administração" ,List.of());
     }

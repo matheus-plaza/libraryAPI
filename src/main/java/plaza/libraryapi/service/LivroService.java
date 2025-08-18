@@ -1,6 +1,9 @@
 package plaza.libraryapi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,7 +40,13 @@ public class LivroService {
         livroRepository.delete(livro);
     }
 
-    public List<Livro> pesquisa(String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao) {
+    public Page<Livro> pesquisa(String isbn,
+                                String titulo,
+                                String nomeAutor,
+                                GeneroLivro genero,
+                                Integer anoPublicacao,
+                                Integer pagina,
+                                Integer tamanhoPagina) {
 
 //        Specification<Livro> specs = Specification.where(LivroSpecs.isbnEqual(isbn)
 //                .and(LivroSpecs.tituloLike(titulo)
@@ -64,7 +73,9 @@ public class LivroService {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
-        return livroRepository.findAll(specs);
+        Pageable pagerequest = PageRequest.of(pagina, tamanhoPagina);
+
+        return livroRepository.findAll(specs, pagerequest);
     }
 
     public void atualizar(Livro livro) {

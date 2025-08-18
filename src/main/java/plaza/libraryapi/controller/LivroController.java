@@ -2,6 +2,7 @@ package plaza.libraryapi.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plaza.libraryapi.controller.dto.CadastroLivroDTO;
@@ -56,7 +57,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PesquisaLivroDto>> pesquisa(
+    public ResponseEntity<Page<PesquisaLivroDto>> pesquisa(
             @RequestParam(value = "isbn", required = false)
             String isbn,
             @RequestParam(value = "titulo", required = false)
@@ -66,14 +67,17 @@ public class LivroController implements GenericController {
             @RequestParam(value = "genero", required = false)
             GeneroLivro genero,
             @RequestParam(value = "ano-publicacao", required = false)
-            Integer anoPublicacao){
+            Integer anoPublicacao,
+            @RequestParam(value = "pagina", defaultValue = "0")
+            Integer pagina,
+            @RequestParam(value = "tamanho-pagina", defaultValue = "0")
+            Integer tamanhoPagina){
 
-        var resultado = livroService.pesquisa(isbn, titulo, nomeAutor, genero, anoPublicacao);
-        var lista = resultado.stream()
-                .map(livroMapper::toDTO)
-                .collect(Collectors.toList());
+        Page<Livro> paginaResultado = livroService.pesquisa(isbn, titulo, nomeAutor, genero, anoPublicacao, pagina, tamanhoPagina);
 
-        return ResponseEntity.ok(lista);
+         Page<PesquisaLivroDto> resultado = paginaResultado.map(livroMapper::toDTO);
+
+        return ResponseEntity.ok(resultado);
     }
 
     @PutMapping("{id}")
