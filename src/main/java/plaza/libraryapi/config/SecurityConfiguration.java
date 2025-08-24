@@ -2,9 +2,11 @@ package plaza.libraryapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import plaza.libraryapi.security.CustomUserDetailService;
+import plaza.libraryapi.service.UsuarioService;
 
 @Configuration
 @EnableWebSecurity
@@ -20,12 +24,20 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
-                .csrf(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(configurer ->
-                        configurer.loginPage("/login").permitAll())
-                //.httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(http -> {
-                    http.anyRequest().authenticated();
+                        configurer.loginPage("/login"))
+
+                .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers("/login/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.DELETE, "/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers(HttpMethod.GET, "/autores/**").hasAnyRole("USER", "ADMIN");
+                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
+
+                    authorize.anyRequest().authenticated(); //Sempre por ultimo
                 })
                 .build();
     }
@@ -36,18 +48,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails user1 = User.builder()
-                .username("user")
-                .password((encoder.encode("321")))
-                .roles("USER")
-                .build();
-
-        UserDetails user2 = User.builder()
-                .username("admin")
-                .password((encoder.encode("123")))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user1, user2);
+    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
+        return new CustomUserDetailService(usuarioService);
     }
 }
