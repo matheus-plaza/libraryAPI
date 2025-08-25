@@ -3,6 +3,7 @@ package plaza.libraryapi.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import plaza.libraryapi.controller.dto.AutorDTO;
 import plaza.libraryapi.controller.mappers.AutorMapper;
@@ -24,6 +25,7 @@ public class AutorController implements GenericController {
     private final AutorService service;
     private final AutorMapper mapper;
 
+    @PreAuthorize("hasRole('GERENTE')")
     @PostMapping
     public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
         var autor = mapper.toEntity(dto);
@@ -33,6 +35,7 @@ public class AutorController implements GenericController {
         return ResponseEntity.created(location).build();
     }
 
+    @PreAuthorize("hasRole('GERENTE')")
     @PutMapping("{id}")
     public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto) {
         Optional<Autor> autorOptional = service.buscarPorId(UUID.fromString(id));
@@ -50,6 +53,7 @@ public class AutorController implements GenericController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     @GetMapping("{id}")
     public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id) {
         UUID idBuscar = UUID.fromString(id);
@@ -62,6 +66,7 @@ public class AutorController implements GenericController {
 
     }
 
+    @PreAuthorize("hasRole('GERENTE')")
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deletarAutor(@PathVariable String id) {
 
@@ -74,6 +79,8 @@ public class AutorController implements GenericController {
         return ResponseEntity.ok().build();
     }
 
+
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     @GetMapping
     public ResponseEntity<List<AutorDTO>> buscar(
             @RequestParam(required = false) String nome,

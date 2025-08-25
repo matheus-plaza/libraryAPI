@@ -1,6 +1,7 @@
 package plaza.libraryapi.controller.common;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,6 +55,12 @@ public class GlobalExceptionHandler {
         System.out.println(e.getMessage());
         return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Erro inesperado, entre em contato com a administração" ,List.of());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErroResposta handleAcessDaniedException(AccessDeniedException e){
+        return new ErroResposta(HttpStatus.FORBIDDEN.value(), "Acesso negado!", List.of());
     }
 
 }

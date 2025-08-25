@@ -2,6 +2,7 @@ package plaza.libraryapi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import plaza.libraryapi.controller.dto.UsuarioDTO;
 import plaza.libraryapi.controller.mappers.UsuarioMapper;
@@ -18,6 +19,7 @@ public class UsuarioController implements GenericController{
     private final UsuarioService service;
     private final UsuarioMapper mapper;
 
+    @PreAuthorize("hasRole('GERENTE')")
     @PostMapping
     public ResponseEntity<Object> salvarUsuario(@RequestBody UsuarioDTO dto){
         Usuario user = mapper.toEntity(dto);
@@ -27,6 +29,7 @@ public class UsuarioController implements GenericController{
         return ResponseEntity.created(location).build();
     }
 
+    @PreAuthorize("hasRole('GERENTE')")
     @GetMapping
     public ResponseEntity<UsuarioDTO> obterPorLogin(@RequestParam String login){
         return ResponseEntity.ok(mapper.toDTO(service.obterPorLogin(login)));
