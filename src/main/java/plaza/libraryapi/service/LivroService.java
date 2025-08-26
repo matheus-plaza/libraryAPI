@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import plaza.libraryapi.controller.dto.CadastroLivroDTO;
 import plaza.libraryapi.model.GeneroLivro;
 import plaza.libraryapi.model.Livro;
+import plaza.libraryapi.model.Usuario;
 import plaza.libraryapi.repository.LivroRepository;
 import plaza.libraryapi.repository.specs.LivroSpecs;
+import plaza.libraryapi.security.SecurityService;
 import plaza.libraryapi.validator.LivroValidator;
 
 import java.util.List;
@@ -24,11 +26,13 @@ import static plaza.libraryapi.repository.specs.LivroSpecs.*;
 public class LivroService {
 
     private final LivroRepository livroRepository;
-
+    private final SecurityService securityService;
     private final LivroValidator validator;
 
     public Livro salvar(Livro livro) {
         validator.validarISBN(livro);
+        Usuario user = securityService.obterUsuarioLogado();
+        livro.setUsuario(user);
         return livroRepository.save(livro);
     }
 

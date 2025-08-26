@@ -29,11 +29,15 @@ public class Autor {
     private LocalDate dataNascimento;
     @Column(length = 50, nullable = false)
     private String nacionalidade;
+
     @CreatedDate
     private LocalDateTime dataCadastro;
     @LastModifiedDate
     private LocalDateTime dataAtualizacao;
-    private UUID idUsuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 
 
     //    @Transient

@@ -6,8 +6,10 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import plaza.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import plaza.libraryapi.model.Autor;
+import plaza.libraryapi.model.Usuario;
 import plaza.libraryapi.repository.AutorRepository;
 import plaza.libraryapi.repository.LivroRepository;
+import plaza.libraryapi.security.SecurityService;
 import plaza.libraryapi.validator.AutorValidator;
 
 import java.util.List;
@@ -21,9 +23,12 @@ public class AutorService {
     private final AutorRepository repository;
     private final AutorValidator autorValidador;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor autor){
         autorValidador.validar(autor);
+        Usuario user = securityService.obterUsuarioLogado();
+        autor.setUsuario(user);
         return repository.save(autor);
     }
 

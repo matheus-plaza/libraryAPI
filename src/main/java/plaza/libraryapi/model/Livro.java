@@ -33,11 +33,15 @@ public class Livro{
     private GeneroLivro genero;
     @Column(precision = 18, scale = 2, nullable = false)
     private BigDecimal preco;
+
     @CreatedDate
     private LocalDateTime dataCadastro;
     @LastModifiedDate
     private LocalDateTime dataAtualizacao;
-    private UUID idUsuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 
     @ManyToOne(
 //            cascade = CascadeType.ALL,
