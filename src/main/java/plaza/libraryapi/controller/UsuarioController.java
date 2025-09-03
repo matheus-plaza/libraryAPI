@@ -1,5 +1,6 @@
 package plaza.libraryapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +22,7 @@ public class UsuarioController implements GenericController{
 
     @PreAuthorize("hasRole('GERENTE')")
     @PostMapping
-    public ResponseEntity<Object> salvarUsuario(@RequestBody UsuarioDTO dto){
+    public ResponseEntity<Object> salvarUsuario(@RequestBody @Valid UsuarioDTO dto){
         Usuario user = mapper.toEntity(dto);
         service.salvar(user);
 

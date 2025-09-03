@@ -14,10 +14,15 @@ public class SecurityService {
 
     private final UsuarioService usuarioService;
 
+
+    //quando se cadastra um novo livro/autor
     public Usuario obterUsuarioLogado(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails usuerDetails = (UserDetails) authentication.getPrincipal();
-        String login = usuerDetails.getUsername();
-        return usuarioService.obterPorLogin(login);
+
+        if (authentication instanceof CustomAuthentication customAuth) {
+            return  customAuth.getUsuario();
+        }
+
+        return null;
     }
 }

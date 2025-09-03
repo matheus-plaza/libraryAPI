@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import plaza.libraryapi.security.CustomUserDetailService;
+import plaza.libraryapi.security.LoginSocialSucessHandler;
 import plaza.libraryapi.service.UsuarioService;
 
 @Configuration
@@ -26,7 +27,7 @@ import plaza.libraryapi.service.UsuarioService;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSucessHandler sucessHandler) throws Exception{
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
@@ -37,7 +38,9 @@ public class SecurityConfiguration {
                     authorize.requestMatchers("/login/**").permitAll();
                     authorize.anyRequest().authenticated(); //Sempre por ultimo
                 })
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(sucessHandler);
+                })
                 .build();
     }
 

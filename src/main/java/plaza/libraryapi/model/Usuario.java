@@ -19,6 +19,8 @@ public class Usuario {
 
     private String login;
 
+    private String email;
+
     private String senha;
 
     @Type(ListArrayType.class)
