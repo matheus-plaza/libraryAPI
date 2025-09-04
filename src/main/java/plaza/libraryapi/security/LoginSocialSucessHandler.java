@@ -15,6 +15,7 @@ import plaza.libraryapi.model.Usuario;
 import plaza.libraryapi.service.UsuarioService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class LoginSocialSucessHandler extends SavedRequestAwareAuthenticationSuc
 
     private final UsuarioService usuarioService;
     private final PasswordEncoder encoder;
+    private static final String SENHA_PADRAO = "123";//apenas para teste
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -34,8 +36,28 @@ public class LoginSocialSucessHandler extends SavedRequestAwareAuthenticationSuc
 
         Usuario user = usuarioService.obterPorEmail(email);
 
+        if (user == null) {
+            user = criarUsuarioPadrao(email);
+        }
+
         authentication = new CustomAuthentication(user);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    private Usuario criarUsuarioPadrao(String email) {
+        Usuario user;
+        user = new Usuario();
+        user.setEmail(email);
+        user.setLogin(usuarioPorEmail(email));
+        user.setSenha(SENHA_PADRAO);//service ja criptografa a senha
+        user.setRoles(List.of("OPERADOR"));//role mais baixa ate o momento
+        usuarioService.salvar(user);
+
+        return user;
+    }
+
+    private static String usuarioPorEmail(String email){
+        return email.substring(0, email.indexOf("@"));
     }
 }

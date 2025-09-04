@@ -31,15 +31,16 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-//                .formLogin(configurer ->
-//                        configurer.loginPage("/login"))
-                .formLogin(Customizer.withDefaults())
+                .formLogin(configurer ->
+                        configurer.loginPage("/login"))
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
                     authorize.anyRequest().authenticated(); //Sempre por ultimo
                 })
                 .oauth2Login(oauth2 -> {
-                    oauth2.successHandler(sucessHandler);
+                    oauth2
+                            .loginPage("/login")
+                            .successHandler(sucessHandler);
                 })
                 .build();
     }
