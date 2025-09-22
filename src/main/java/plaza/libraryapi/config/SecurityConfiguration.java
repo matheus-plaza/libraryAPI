@@ -17,9 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import plaza.libraryapi.security.CustomUserDetailService;
+import plaza.libraryapi.security.JwtCustomAuthenticationFilter;
 import plaza.libraryapi.security.LoginSocialSucessHandler;
 import plaza.libraryapi.service.UsuarioService;
 
@@ -29,7 +31,9 @@ import plaza.libraryapi.service.UsuarioService;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSucessHandler sucessHandler) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                   LoginSocialSucessHandler sucessHandler,
+                                                   JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception{
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
@@ -45,6 +49,7 @@ public class SecurityConfiguration {
                             .successHandler(sucessHandler);
                 })
                 .oauth2ResourceServer(oauth2RS -> oauth2RS.jwt(Customizer.withDefaults()))
+                .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
