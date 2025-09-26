@@ -1,5 +1,9 @@
 package plaza.libraryapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +23,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("autores")
+@Tag(name = "Autores")
 //http://localgost:8080/autores
 public class AutorController implements GenericController {
 
     private final AutorService service;
     private final AutorMapper mapper;
 
+    @Operation(summary = "Salvar", description = "Cadastrar um novo autor")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Autor salvo com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "409", description = "Autor já cadastrado"),
+    })
     @PreAuthorize("hasRole('GERENTE')")
     @PostMapping
     public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
@@ -35,6 +47,13 @@ public class AutorController implements GenericController {
         return ResponseEntity.created(location).build();
     }
 
+    @Operation(summary = "Atualizar", description = "Atualizar um autor existente")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Autor atualizado com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "404", description = "Autor nao encontrado"),
+            @ApiResponse(responseCode = "409", description = "Autor já cadastrado"),
+    })
     @PreAuthorize("hasRole('GERENTE')")
     @PutMapping("{id}")
     public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto) {
@@ -50,9 +69,15 @@ public class AutorController implements GenericController {
 
         service.atualizar(autor);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Obter detalhes", description = "Retorna os dados do autor pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Autor encontrado"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "404", description = "Autor não encontrado"),
+    })
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     @GetMapping("{id}")
     public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id) {
@@ -66,6 +91,12 @@ public class AutorController implements GenericController {
 
     }
 
+    @Operation(summary = "Deletar", description = "Cadastrar um novo autor")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Nao encontrado"),
+            @ApiResponse(responseCode = "400", description = "Autor vinculado a um livro"),
+    })
     @PreAuthorize("hasRole('GERENTE')")
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deletarAutor(@PathVariable String id) {
@@ -79,7 +110,10 @@ public class AutorController implements GenericController {
         return ResponseEntity.ok().build();
     }
 
-
+    @Operation(summary = "Pesquisar", description = "Realiza pesquisa de autores por parametros")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso na pesquisa"),
+    })
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     @GetMapping
     public ResponseEntity<List<AutorDTO>> buscar(

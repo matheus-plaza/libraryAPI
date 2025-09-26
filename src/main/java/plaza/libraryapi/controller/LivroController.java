@@ -1,5 +1,9 @@
 package plaza.libraryapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,11 +27,19 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("livros")
 @RequiredArgsConstructor
+@Tag(name = "Livros")
 public class LivroController implements GenericController {
 
     private final LivroService livroService;
     private final LivroMapper livroMapper;
 
+    @Operation(summary = "Salvar", description = "Cadastrar um novo livro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Livro salvo com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "409", description = "Livro já cadastrado"),
+    })
     @PostMapping
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO livroDto) {
@@ -38,6 +50,12 @@ public class LivroController implements GenericController {
         return ResponseEntity.created(location).build();
     }
 
+    @Operation(summary = "Obter detalhes", description = "Obter detalhes de um livro pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livro encontrado"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+    })
     @GetMapping("{id}")
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<PesquisaLivroDto> obterDetalhes(@PathVariable String id){
@@ -50,6 +68,12 @@ public class LivroController implements GenericController {
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Deletar", description = "Deletar um livro pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Livro deletado com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+    })
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> deletar(@PathVariable String id){
@@ -60,6 +84,11 @@ public class LivroController implements GenericController {
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Pesquisar", description = "Pesquisar livros com filtros opcionais")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Pesquisa realizada com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado")
+    })
     @GetMapping
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Page<PesquisaLivroDto>> pesquisa(
@@ -85,6 +114,13 @@ public class LivroController implements GenericController {
         return ResponseEntity.ok(resultado);
     }
 
+    @Operation(summary = "Atualizar", description = "Atualizar os dados de um livro pelo ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Livro atualizado com sucesso"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado"),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação")
+    })
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody @Valid CadastroLivroDTO dto){
