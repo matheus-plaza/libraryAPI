@@ -27,7 +27,6 @@ public class SecurityConfiguration {
                                                    JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception{
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
                 .formLogin(configurer ->
                         configurer.loginPage("/login"))
                 .authorizeHttpRequests(authorize -> {
