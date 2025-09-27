@@ -1,6 +1,7 @@
 package plaza.libraryapi.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +14,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("clients")
 @RequiredArgsConstructor
+@Slf4j
 public class ClientController implements GenericController {
 
     private final ClientService service;
@@ -21,6 +23,7 @@ public class ClientController implements GenericController {
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> salvar(@RequestBody Client client){
         service.salvar(client);
+        log.info("Registrando novo Client: {} com scope: {}", client.getClientId(), client.getScope());
 
         URI location = gerarHeadLocation(client.getId());
 

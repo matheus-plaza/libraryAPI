@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("livros")
 @RequiredArgsConstructor
 @Tag(name = "Livros")
+@Slf4j
 public class LivroController implements GenericController {
 
     private final LivroService livroService;
@@ -47,6 +49,7 @@ public class LivroController implements GenericController {
         Livro livro = livroMapper.toEntity(livroDto);
         livroService.salvar(livro);
         URI location = gerarHeadLocation(livro.getId());
+        log.info("Salvando livro: {}", livroDto.titulo());
         return ResponseEntity.created(location).build();
     }
 
@@ -80,6 +83,7 @@ public class LivroController implements GenericController {
         return livroService.buscarPorId(UUID.fromString(id))
                 .map(livro -> {
                     livroService.deletarLivro(livro);
+                    log.info("Deletando livro: {}", id);
                     return ResponseEntity.noContent().build();
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }

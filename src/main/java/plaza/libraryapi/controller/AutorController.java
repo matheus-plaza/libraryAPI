@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("autores")
 @Tag(name = "Autores")
+@Slf4j
 //http://localgost:8080/autores
 public class AutorController implements GenericController {
 
@@ -40,10 +42,12 @@ public class AutorController implements GenericController {
     @PreAuthorize("hasRole('GERENTE')")
     @PostMapping
     public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
+        log.info("Salvando autor: {}", dto.nome());
         var autor = mapper.toEntity(dto);
         service.salvar(autor);
         URI location = gerarHeadLocation(autor.getId());
 
+        log.info("Autor salvo com sucesso: {}", autor.getId());
         return ResponseEntity.created(location).build();
     }
 
@@ -100,13 +104,14 @@ public class AutorController implements GenericController {
     @PreAuthorize("hasRole('GERENTE')")
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deletarAutor(@PathVariable String id) {
-
+        log.info("Deletando autor de id: {}", id);
         UUID idBuscar = UUID.fromString(id);
         Optional<Autor> autorOptional = service.buscarPorId(idBuscar);
         if (autorOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         service.deletarAutor(autorOptional.get());
+        log.info("Autor deletado com sucesso: {}", id);
         return ResponseEntity.ok().build();
     }
 
