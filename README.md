@@ -1,16 +1,15 @@
 # Library API 📚
 
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
-![Java](https://img.shields.io/badge/Java-21%2B-blue)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
+![Status](https://img.shields.io/badge/Status-Concluído-brightgreen)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3-brightgreen)
 
 API RESTful para um sistema de gerenciamento de biblioteca, desenvolvida como parte de um estudo aprofundado sobre o ecossistema Spring. O projeto aborda desde a arquitetura e acesso a dados até tópicos avançados de segurança, documentação e observabilidade.
 
-## Status Atual do Projeto
+## ✅ Projeto Concluído
 
-O projeto está sendo construído seguindo uma trilha de aprendizado. Abaixo estão os tópicos já implementados e os próximos passos:
+O projeto foi finalizado, cobrindo todos os tópicos planejados da trilha de aprendizado. As funcionalidades implementadas incluem:
 
-**✅ Implementado:**
 -   Arquitetura base com Spring Boot
 -   Acesso a dados com Spring Data JPA
 -   Desenvolvimento de endpoints RESTful para as principais entidades (Livros, Autores, etc.)
@@ -18,16 +17,15 @@ O projeto está sendo construído seguindo uma trilha de aprendizado. Abaixo est
 -   Implementação de segurança com Spring Security
 -   Autenticação via Social Login
 -   Criação de um Authorization Server com OAuth2 e JWT
-
-**▶️ Próximos Passos:**
--   [ ] Documentação da API com OpenAPI (Swagger)
--   [ ] Implementação de Logging, Métricas e Observabilidade com Spring Boot Actuator
+-   Documentação da API com OpenAPI (Swagger)
+-   Implementação de Logging, Métricas e Observabilidade com Spring Boot Actuator
+-   Containerização com Docker e deploy na nuvem AWS (EC2 e RDS).
 
 ## Tecnologias e Conceitos Abordados
 
 Esta API foi construída com as seguintes tecnologias e conceitos:
 
--   **Linguagem:** Java 21+
+-   **Linguagem:** Java 21
 -   **Framework Principal:** Spring Boot 3
 -   **Persistência:** Spring Data JPA com Hibernate
 -   **Banco de Dados:** PostgreSQL
@@ -56,7 +54,7 @@ A API é organizada em torno dos seguintes recursos principais:
 -   `/autores` - Gerenciamento de autores
 -   `/usuarios` - Gerenciamento de usuários do sistema
 -   `/clientes` - Gerenciamento de clientes da biblioteca
--   ... e outros endpoints relacionados.
+-   `/login` - Login de usuarios
 
 ## Pré-requisitos para executar:
 
@@ -67,7 +65,7 @@ A API é organizada em torno dos seguintes recursos principais:
 
 ## Documentação da API (Swagger)
 
-Estará acessível após a implementação da funcionalidade de documentação
+A documentação da API está disponível e pode ser acessada através do endpoint `/swagger-ui/index.html` após a execução da aplicação.
 
 ## Autor:
 
