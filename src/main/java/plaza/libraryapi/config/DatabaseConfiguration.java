@@ -2,6 +2,7 @@ package plaza.libraryapi.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
+@Slf4j
 public class DatabaseConfiguration {
 
     @Value("${spring.datasource.url}")
@@ -20,6 +22,7 @@ public class DatabaseConfiguration {
     String password;
     @Value("${spring.datasource.driver-class-name}")
     String driver;
+
 
     //@Bean
     public DataSource dataSource(){
@@ -38,6 +41,8 @@ public class DatabaseConfiguration {
         config.setUsername(username);
         config.setPassword(password);
         config.setJdbcUrl(url);
+
+        log.info("iniciando conexão com o banco na url: {}", url);
 
         config.setMaximumPoolSize(10); //maximo de conexoes liberadas
         config.setMinimumIdle(1); //tamanho inicial do pool

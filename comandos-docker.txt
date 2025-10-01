@@ -16,3 +16,16 @@ docker run --name librarydb -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postg
 
 # Rodar Pgadmin 4
 docker run --name pgadmin4 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin -p 15432:80 -d --network library-network dpage/pgadmin4:8.9
+
+#Ambiente de Produção
+
+# Criando Imagem
+docker build -t matheus-plaza/libraryapi .
+docker tag matheus-plaza/libraryapi matheusplaza/libraryapi
+docker push matheusplaza/libraryapi
+
+#Criando Container
+docker run --name libraryapi-production -e DATASOURCE_URL=jdbc:postgresql://librarydb-prod:5432/library -e DATASOURCE_USERNAME=postgresprod -e DATASOURCE_PASSWORD=postgresprod --network library-network -d -p 8080:8080 -p 9090:9090 matheus-plaza/libraryapi
+
+#RODAR NA AWS
+sudo docker rn --name libraryapi -e DATASORCE_RL=jdbc:postgresql://libraryapi-database.chw4g4i4gqox.s-east-1.rds.amazonaws.com:5432/library -e DATASOURCE_USERNAME=admin -e DATASOURCE_PASSWORD=admin -d -p 8080:8080 -p 9090:9090 matheusplaza/libraryapi
